@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from domain.enums import SubTaskType
+from domain.models.agent import Summary
 
 
 class SubTask(BaseModel):
@@ -22,7 +23,15 @@ class TaskRequest(BaseModel):
 
 class TaskResponse(BaseModel):
     trace_id: str
-    summary: dict  # will become Summary model on Day 2
+    summary: Summary
     subtasks_executed: int
     failed_subtasks: list[int] = Field(default_factory=list)
+    duration_ms: int
+
+
+class TaskResult(BaseModel):
+    """Internal model passed between Orchestrator and agents."""
+    subtask_id: int
+    agent_name: str
+    output: dict
     duration_ms: int
